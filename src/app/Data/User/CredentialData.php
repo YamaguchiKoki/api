@@ -4,21 +4,19 @@ declare(strict_types=1);
 
 namespace App\Data\User;
 
-use DateTime;
+use DateTimeImmutable;
 use Illuminate\Support\Facades\Hash;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;
 
-class CredentialData extends Data
+final class CredentialData extends Data
 {
-
-
-  public function __construct(
-    public string $email,
-    public string $password,
-    public int | Optional $otp,
-    public DateTime | Optional $expiredAt,
-  ) {
-    $this->password = Hash::make($password);
-  }
+    public function __construct(
+        public string $email,
+        public string $password,
+        public int|Optional $otp,
+        public DateTimeImmutable|Optional $expiredAt,
+    ) {
+        $this->password = Hash::make($password);
+    }
 }

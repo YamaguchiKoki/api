@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs;
 
 use App\Mail\AuthCodeMailable;
@@ -10,10 +12,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
-class SendVerificationEmail implements ShouldQueue
+final class SendVerificationEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -26,9 +27,9 @@ class SendVerificationEmail implements ShouldQueue
      */
     public function __construct(User $user)
     {
-      $this->user = $user;
+        $this->user = $user;
 
-      $this->otp = $user->otps()->where('expired_at', '>', now())->where('is_used', 0)->first();
+        $this->otp = $user->otps()->where('expired_at', '>', now())->where('is_used', 0)->first();
     }
 
     /**

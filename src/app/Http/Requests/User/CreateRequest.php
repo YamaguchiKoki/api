@@ -1,20 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\User;
 
 use App\Data\User\CredentialData;
 use Illuminate\Foundation\Http\FormRequest;
 
-use function PHPUnit\Framework\isTrue;
-
-class CreateRequest extends FormRequest
+final class CreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-      return true;
+        return true;
     }
 
     /**
@@ -24,14 +24,14 @@ class CreateRequest extends FormRequest
      */
     public function rules(): array
     {
-      return [
-        'email' => 'required | email',
-        'password' => 'required | string | min:8 | max:100',
-      ];
+        return [
+            'email' => 'required | email',
+            'password' => 'required | string | min:8 | max:100',
+        ];
     }
 
     public function getAttributes(): CredentialData
     {
-      return CredentialData::from($this->validated());
+        return CredentialData::from($this->validated());
     }
 }
