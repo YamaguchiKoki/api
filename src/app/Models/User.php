@@ -74,7 +74,7 @@ final class User extends Authenticatable implements JWTSubject
 
     public function otps()
     {
-        return $this->hasMany(Otps::class);
+        return $this->hasMany(Otp::class);
     }
 
     // フォロー中のユーザーを取得

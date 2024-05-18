@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Jobs;
 
 use App\Mail\AuthCodeMailable;
-use App\Models\Otps;
+use App\Models\Otp;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -20,7 +20,7 @@ final class SendVerificationEmail implements ShouldQueue
 
     protected User $user;
 
-    protected Otps $otp;
+    protected Otp $otp;
 
     /**
      * Create a new job instance.

@@ -12,4 +12,5 @@ Route::get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'user'], function () {
     Route::post('/create', [UserController::class, 'create']);
+    Route::post('/activate', [UserController::class, 'activate']);
 });

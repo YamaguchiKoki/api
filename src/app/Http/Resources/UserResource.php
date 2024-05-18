@@ -17,7 +17,11 @@ final class UserResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-
+            'id' => $this->id,
+            'screen_name' => $this->when(! is_null($this->screenName), $this->screenName),
+            'bio' => $this->when(! is_null($this->bio), $this->bio),
+            'image_url' => $this->when(! is_null($this->imageUrl), $this->imageUrl),
+            'token' => $this->token,
         ];
     }
 }
