@@ -4,19 +4,15 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\User;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
  */
-final class UserFactory extends Factory
+final class OtpFactory extends Factory
 {
-    /**
-     * The current password being used by the factory.
-     */
-    protected static ?string $password;
-
     /**
      * Define the model's default state.
      *
@@ -25,9 +21,9 @@ final class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'screen_name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'password' => self::$password ??= Hash::make('password'),
+            'user_id' => User::factory(),
+            'otp_code' => fake()->numerify('######'),
+            'expired_at' => CarbonImmutable::tomorrow(),
         ];
     }
 

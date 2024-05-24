@@ -2,20 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseRequest;
 
-final class StoreRequest extends FormRequest
+final class ActivateRequest extends BaseRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -24,7 +16,12 @@ final class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'otp' => 'required | numeric | digits:6',
         ];
+    }
+
+    public function getAttributes(): int
+    {
+        return (int) $this->validated()['otp'];
     }
 }

@@ -7,7 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-final class Otps extends Model
+final class Otp extends Model
 {
     use HasFactory;
 
