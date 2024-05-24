@@ -14,6 +14,7 @@ use App\UseCases\User\Exceptions\DuplicateUserException;
 use App\UseCases\User\RegisterByCredentialsAction;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 final class UserController extends Controller
 {
@@ -24,7 +25,7 @@ final class UserController extends Controller
      *
      * email, passwordを受けDBにユーザー情報を仮登録
      * その後OTPをメールで送信する
-     * 
+     *
      * @param CreateRequest $request
      * @param RegisterByCredentialsAction $create
      * @return JsonResponse
@@ -35,6 +36,7 @@ final class UserController extends Controller
          * @var CredentialData $attributes
          */
         $attributes = $request->getAttributes();
+        Log::debug(print_r($attributes, true));
 
         try {
             $create($attributes);
