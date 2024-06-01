@@ -21,7 +21,6 @@ final class UserResource extends JsonResource
             'screen_name' => $this->when(! is_null($this->screenName), $this->screenName),
             'bio' => $this->when(! is_null($this->bio), $this->bio),
             'image_url' => $this->when(! is_null($this->imageUrl), $this->imageUrl),
-            'token' => $this->token,
         ];
     }
 }

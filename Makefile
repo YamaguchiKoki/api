@@ -48,7 +48,7 @@ tinker:
 dump:
 	docker compose exec app php artisan dump-server
 test:
-	docker compose exec app php artisan test
+	docker compose exec app php artisan test --env=testing
 migrate:
 	docker compose exec app php artisan migrate
 fresh:

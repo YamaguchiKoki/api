@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\User;
 
-use App\Data\User\CredentialData;
+use App\Data\User\InitialData;
 use App\Http\Requests\BaseRequest;
 
 final class CreateRequest extends BaseRequest
@@ -17,13 +17,14 @@ final class CreateRequest extends BaseRequest
     public function rules(): array
     {
         return [
+            'screen_name' => 'string',
             'email' => 'required | email',
             'password' => 'required | string | min:8 | max:100',
         ];
     }
 
-    public function getAttributes(): CredentialData
+    public function getAttributes(): InitialData
     {
-        return CredentialData::from($this->validated());
+        return InitialData::from($this->validated());
     }
 }

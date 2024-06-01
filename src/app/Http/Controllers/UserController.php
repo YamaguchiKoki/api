@@ -4,68 +4,76 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Data\Resources\User\UserWithTokenResource;
 use App\Data\User\CredentialData;
-use App\Data\User\UserWithTokenData;
-use App\Http\Requests\User\ActivateRequest;
+use App\Data\User\InitialData;
 use App\Http\Requests\User\CreateRequest;
+use App\Http\Requests\User\LoginRequest;
 use App\Http\Resources\UserResource;
-use App\UseCases\User\ActivateAction;
+use App\UseCases\User\CreateAction;
+use App\UseCases\User\Exceptions\AuthenticationException;
 use App\UseCases\User\Exceptions\DuplicateUserException;
-use App\UseCases\User\RegisterByCredentialsAction;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\UseCases\User\LoginAction;
+use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 final class UserController extends Controller
 {
     //500errorの共通処理かく
 
+    // TODO screen_nameも登録　一旦メール無しに
     /**
      * ユーザー新規登録
      *
      * email, passwordを受けDBにユーザー情報を仮登録
      * その後OTPをメールで送信する
-     *
-     * @param CreateRequest $request
-     * @param RegisterByCredentialsAction $create
-     * @return JsonResponse
      */
-    public function create(CreateRequest $request, RegisterByCredentialsAction $create): JsonResponse
+    public function create(CreateRequest $request, CreateAction $create): JsonResponse
     {
         /**
-         * @var CredentialData $attributes
+         * @var InitialData $attributes
          */
         $attributes = $request->getAttributes();
-        Log::debug(print_r($attributes, true));
 
         try {
             $create($attributes);
         } catch (DuplicateUserException $e) {
             return response()->json(['error' => $e->getMessage()], $e->getCode());
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
 
-        return new JsonResponse(['success' => true, 'message' => '登録されたメールアドレス宛に認証コードを送信しました'],
-            201
-        );
+        return response()->json(['success' => true, 'message' => 'ユーザー登録に成功しました'], 201);
     }
 
-    public function activate(ActivateRequest $request, ActivateAction $activate): UserResource
+    public function login(LoginRequest $request, LoginAction $login): UserWithTokenResource
     {
         /**
-         * @var int $otp
+         * @var CredentialData $attributes
          */
-        $otp = $request->getAttributes();
+        $attributes = $request->getAttributes();
 
         try {
             /**
-             * @var UserWithTokenData $responseData
+             * @var UserResource $user
+             * @var string $token
              */
-            $responseData = $activate($otp);
+            [$user, $token] = $login($attributes);
 
-            return new UserResource($responseData);
-
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => '該当するリソースが見つかりませんでした'], 404);
+            return UserWithTokenResource::from([
+                'user' => $user,
+                'token' => $token,
+            ]);
+        } catch (AuthenticationException $e) {
+            return response()->json(['error' => $e->getMessage()], $e->getCode());
         }
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+
+        return response()->noContent();
     }
 }
