@@ -10,7 +10,12 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+Route::post('/login', [UserController::class, 'login']);
+
+Route::middleware('auth:jwt')->group(function () {
+    Route::post('/logout', [UserController::class, 'logout']);
+});
+
 Route::group(['prefix' => 'user'], function () {
     Route::post('/create', [UserController::class, 'create']);
-    Route::post('/activate', [UserController::class, 'activate']);
 });
