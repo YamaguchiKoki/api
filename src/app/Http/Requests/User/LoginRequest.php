@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\User;
 
-use App\Data\User\CredentialData;
+use App\Data\Request\User\CredentialData;
 use App\Http\Requests\BaseRequest;
 
 final class LoginRequest extends BaseRequest

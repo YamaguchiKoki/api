@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\UseCases\User;
 
 use App\Data\Resources\User\UserResource;
-use App\Data\User\CredentialData;
+use \App\Data\Request\User\CredentialData;
 use App\UseCases\User\Exceptions\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
 

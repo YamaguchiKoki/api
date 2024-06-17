@@ -5,24 +5,24 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Data\Resources\User\UserWithTokenResource;
-use App\Data\User\CredentialData;
-use App\Data\User\InitialData;
+use App\Data\Request\User\CredentialData;
+use App\Data\Request\User\InitialData;
 use App\Http\Requests\User\CreateRequest;
 use App\Http\Requests\User\LoginRequest;
 use App\Http\Resources\UserResource;
 use App\UseCases\User\CreateAction;
-use App\UseCases\User\Exceptions\AuthenticationException;
-use App\UseCases\User\Exceptions\DuplicateUserException;
 use App\UseCases\User\LoginAction;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 final class UserController extends Controller
 {
     //500errorの共通処理かく
+    //基本的にはカスタム例外クラスに、ステータスコード、メッセージを詰めてあるので、レスポンスマクロに登録したerrorレスポンスにメッセージとコードを渡す
+    //特定の例外のみerrorマクロに収まらない処理を行いたい場合のみcatchブロックを追加
 
-    // TODO screen_nameも登録　一旦メール無しに
     /**
      * ユーザー新規登録
      *
@@ -38,13 +38,10 @@ final class UserController extends Controller
 
         try {
             $create($attributes);
-        } catch (DuplicateUserException $e) {
-            return response()->json(['error' => $e->getMessage()], $e->getCode());
         } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->error($e->getCode(), $e->getMessage());
         }
-
-        return response()->json(['success' => true, 'message' => 'ユーザー登録に成功しました'], 201);
+        return response()->json(['success' => true, 'message' => 'ユーザー登録に成功しました'], Response::HTTP_CREATED);
     }
 
     public function login(LoginRequest $request, LoginAction $login): UserWithTokenResource
@@ -65,8 +62,8 @@ final class UserController extends Controller
                 'user' => $user,
                 'token' => $token,
             ]);
-        } catch (AuthenticationException $e) {
-            return response()->json(['error' => $e->getMessage()], $e->getCode());
+        } catch (Exception $e) {
+          return response()->error($e->getCode(), $e->getMessage());
         }
     }
 

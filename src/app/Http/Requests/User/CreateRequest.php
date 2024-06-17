@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\User;
 
-use App\Data\User\InitialData;
+use App\Data\Request\User\InitialData;
 use App\Http\Requests\BaseRequest;
 
 final class CreateRequest extends BaseRequest

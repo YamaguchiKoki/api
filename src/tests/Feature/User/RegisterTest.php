@@ -50,7 +50,7 @@ final class RegisterTest extends TestCase
     {
         $user = User::factory()->create();
         $expected = [
-            'error' => '登録済みユーザーのため登録できません。',
+            'message' => '登録済みユーザーのため登録できません。',
         ];
         $attributes = [
             'email' => $user->email,

@@ -11,6 +11,8 @@ final class Song extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function playlist()
     {
         return $this->belongsTo(Playlist::class);
