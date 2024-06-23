@@ -103,4 +103,14 @@ final class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(BookShelf::class);
     }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    public function likedPlaylists()
+    {
+        return $this->belongsToMany(Playlist::class, 'likes');
+    }
 }

@@ -33,4 +33,14 @@ final class Playlist extends Model
     {
         return $this->morphMany(BookShelfItem::class, 'itemable');
     }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    public function likedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'likes');
+    }
 }
