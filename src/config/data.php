@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Support\Enumerable;
 
 return [
@@ -43,7 +45,7 @@ return [
     'casts' => [
         DateTimeInterface::class => Spatie\LaravelData\Casts\DateTimeInterfaceCast::class,
         BackedEnum::class => Spatie\LaravelData\Casts\EnumCast::class,
-//        Enumerable::class => Spatie\LaravelData\Casts\EnumerableCast::class,
+        //        Enumerable::class => Spatie\LaravelData\Casts\EnumerableCast::class,
     ],
 
     /**
@@ -143,9 +145,9 @@ return [
     'throw_when_max_transformation_depth_reached' => true,
 
     /**
-    * When using the `make:data` command, the package will use these settings to generate
-    * the data classes. You can override these settings by passing options to the command.
-    */
+     * When using the `make:data` command, the package will use these settings to generate
+     * the data classes. You can override these settings by passing options to the command.
+     */
     'commands' => [
         /**
          * Provides default configuration for the `make:data` command. These settings can be overridden with options
