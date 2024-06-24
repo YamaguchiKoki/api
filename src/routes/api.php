@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Actions\GetProfile;
 use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -15,6 +16,7 @@ Route::post('/login', [UserController::class, 'login']);
 
 Route::middleware('auth:jwt')->group(function () {
     Route::post('/logout', [UserController::class, 'logout']);
+    Route::get('/profile/{user}', GetProfile::class);
     Route::group(['prefix' => 'playlist'], function () {
       Route::get('/index', [PlaylistController::class, 'index'])->name('playlist.index');
       Route::get('/show', [PlaylistController::class, 'show'])->name('playlist.show');
