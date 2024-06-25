@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Ramsey\Uuid\Uuid;
@@ -23,6 +24,10 @@ final class User extends Authenticatable implements JWTSubject
      * @var array<int, string>
      */
     protected $guarded = [];
+
+    protected $keyType = 'string';
+
+    public $incrementing = false;
 
     /**
      * The attributes that should be hidden for serialization.
@@ -112,5 +117,12 @@ final class User extends Authenticatable implements JWTSubject
     public function likedPlaylists()
     {
         return $this->belongsToMany(Playlist::class, 'likes');
+    }
+
+    public function snsProviders(): BelongsToMany
+    {
+        return $this->belongsToMany(SnsProvider::class, 'user_sns_links', 'user_id', 'provider_id')
+                    ->withPivot('sns_user_id')
+                    ->withTimestamps();
     }
 }

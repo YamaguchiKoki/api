@@ -14,8 +14,10 @@ use App\UseCases\User\CreateAction;
 use App\UseCases\User\LoginAction;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 final class UserController extends Controller
 {
@@ -44,7 +46,7 @@ final class UserController extends Controller
         return response()->json(['success' => true, 'message' => 'ユーザー登録に成功しました'], Response::HTTP_CREATED);
     }
 
-    public function login(LoginRequest $request, LoginAction $login): UserWithTokenResource
+    public function login(LoginRequest $request, LoginAction $login): UserWithTokenResource | JsonResponse
     {
         /**
          * @var CredentialData $attributes
@@ -58,11 +60,13 @@ final class UserController extends Controller
              */
             [$user, $token] = $login($attributes);
 
+            //201になってる
             return UserWithTokenResource::from([
                 'user' => $user,
                 'token' => $token,
             ]);
         } catch (Exception $e) {
+          Log::debug(print_r($e->getMessage(), true));
           return response()->error($e->getCode(), $e->getMessage());
         }
     }
@@ -72,5 +76,10 @@ final class UserController extends Controller
         Auth::logout();
 
         return response()->noContent();
+    }
+
+    public function update(Request $request)
+    {
+
     }
 }
