@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -119,10 +120,8 @@ final class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(Playlist::class, 'likes');
     }
 
-    public function snsProviders(): BelongsToMany
+    public function snsLinks(): HasMany
     {
-        return $this->belongsToMany(SnsProvider::class, 'user_sns_links', 'user_id', 'provider_id')
-                    ->withPivot('sns_user_id')
-                    ->withTimestamps();
+        return $this->hasMany(UserSnsLink::class);
     }
 }

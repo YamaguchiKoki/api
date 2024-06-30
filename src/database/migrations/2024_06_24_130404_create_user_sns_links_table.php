@@ -16,7 +16,7 @@ return new class extends Migration
           $table->string('user_id');
           $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
           $table->foreignId('provider_id')->constrained('sns_providers')->onDelete('cascade');
-          $table->string('sns_user_id');
+          $table->string('url');
           $table->timestamps();
         });
     }
