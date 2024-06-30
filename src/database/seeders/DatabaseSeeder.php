@@ -12,7 +12,6 @@ use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\UserSnsLink;
 use Illuminate\Database\Seeder;
-use App\Models\SnsProvider;
 
 final class DatabaseSeeder extends Seeder
 {
