@@ -20,7 +20,7 @@ final class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(SnsProvidersTableSeeder::class);
+        // $this->call(SnsProvidersTableSeeder::class);
 
         $user = User::factory()->create([
             'screen_name' => 'Test User',
