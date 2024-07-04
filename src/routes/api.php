@@ -8,15 +8,13 @@ use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
 Route::post('/login', [UserController::class, 'login']);
 
 Route::middleware('auth:jwt')->group(function () {
+    Route::get('/me', [UserController::class, 'show']);
     Route::post('/logout', [UserController::class, 'logout']);
     Route::get('/profile', GetProfile::class);
+    Route::post('/user/update', [UserController::class, 'update']);
     Route::group(['prefix' => 'playlist'], function () {
       Route::get('/index', [PlaylistController::class, 'index'])->name('playlist.index');
       Route::get('/show', [PlaylistController::class, 'show'])->name('playlist.show');
@@ -25,5 +23,4 @@ Route::middleware('auth:jwt')->group(function () {
 });
 Route::group(['prefix' => 'user'], function () {
     Route::post('/create', [UserController::class, 'create']);
-    Route::post('/update', [UserController::class, 'update']);
 });

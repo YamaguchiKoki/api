@@ -21,6 +21,12 @@ final class LoginAction
 
         $user = Auth::guard('jwt')->user();
 
-        return [UserResource::from($user), $token];
+        if (! $user) {
+          throw new AuthenticationException('User not found');
+        }
+
+        // dd($user);
+
+        return [UserResource::fromModel($user), $token];
     }
 }
