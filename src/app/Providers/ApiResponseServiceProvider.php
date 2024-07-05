@@ -22,6 +22,15 @@ class ApiResponseServiceProvider extends ServiceProvider
     {
         Response::macro('error', function($status, $message) {
           return response()->json([
+            'success' => false,
+            'code' => $status,
+            'message' => $message
+          ], $status);
+        });
+
+        Response::macro('success', function($status, $message) {
+          return response()->json([
+            'success' => true,
             'code' => $status,
             'message' => $message
           ], $status);

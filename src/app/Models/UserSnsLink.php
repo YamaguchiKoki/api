@@ -8,9 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserSnsLink extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'user_id', 'provider_id', 'sns_user_id',
-    ];
+    protected $guarded = [];
 
     public function user()
     {

@@ -25,8 +25,6 @@ final class LoginAction
           throw new AuthenticationException('User not found');
         }
 
-        // dd($user);
-
         return [UserResource::fromModel($user), $token];
     }
 }

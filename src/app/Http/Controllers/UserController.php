@@ -11,12 +11,11 @@ use App\Data\Request\User\UpdateProfileData;
 use App\Http\Requests\User\CreateRequest;
 use App\Http\Requests\User\LoginRequest;
 use App\Data\Resources\User\UserResource;
-use App\Enums\SnsProviderType;
 use App\Http\Requests\User\UpdateRequest;
-use App\Models\SnsProvider;
 use App\Models\User;
 use App\UseCases\User\CreateAction;
 use App\UseCases\User\LoginAction;
+use App\UseCases\User\UpdateAction;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -33,8 +32,9 @@ final class UserController extends Controller
     /**
      * ユーザー新規登録
      *
-     * email, passwordを受けDBにユーザー情報を仮登録
-     * その後OTPをメールで送信する
+     * @param CreateRequest $request
+     * @param CreateAction $create
+     * @return JsonResponse
      */
     public function create(CreateRequest $request, CreateAction $create): JsonResponse
     {
@@ -46,11 +46,19 @@ final class UserController extends Controller
         try {
             $create($userData);
         } catch (Exception $e) {
+            Log::error(print_r($e->getMessage(), true));
             return response()->error($e->getCode(), $e->getMessage());
         }
-        return response()->json(['success' => true, 'message' => 'ユーザー登録に成功しました'], Response::HTTP_CREATED);
+        return response()->success(Response::HTTP_CREATED, 'ユーザー登録に成功しました');
     }
 
+    /**
+     * ユーザーログイン
+     *
+     * @param LoginRequest $request
+     * @param LoginAction $login
+     * @return UserWithTokenResource | JsonResponse
+     */
     public function login(LoginRequest $request, LoginAction $login): UserWithTokenResource | JsonResponse
     {
         /**
@@ -65,9 +73,6 @@ final class UserController extends Controller
              */
             [$user, $token] = $login($credentials);
 
-            // dd($user);
-
-            //201になってる
             return UserWithTokenResource::from([
                 'user' => $user,
                 'token' => $token,
@@ -78,6 +83,11 @@ final class UserController extends Controller
         }
     }
 
+    /**
+     * ユーザーログアウト
+     *
+     * @return void
+     */
     public function logout()
     {
         Auth::logout();
@@ -85,53 +95,29 @@ final class UserController extends Controller
         return response()->noContent();
     }
 
-    public function update(UpdateRequest $request)
+    /**
+     * ユーザー更新
+     *
+     * @param UpdateRequest $request
+     * @param UpdateAction $update
+     * @return JsonResponse
+     */
+    public function update(UpdateRequest $request, UpdateAction $update): JsonResponse
     {
-      //TODO 動作確認後フロントと連携
       /**
        * @var UpdateProfileData $userData
        */
       $userData = $request->getAttributes();
       try {
         DB::beginTransaction();
-        $user = Auth::guard('jwt')->user();
-        if ($user instanceof User) {
-          $user->update([
-            'screen_name' => $userData->screen_name,
-            'bio' => $userData->bio,
-          ]);
-
-          // SNSリンクの更新
-          // 既存のリンクを全て削除
-          $user->snsLinks()->delete();
-
-         // SNSプロバイダーを取得
-        $snsProviders = SnsProvider::whereIn('provider_name', array_column(SnsProviderType::cases(), 'value'))->get()->keyBy('provider_name');
-
-        $snsLinks = [
-            SnsProviderType::SPOTIFY->value => $userData->spotify,
-            SnsProviderType::YOUTUBE->value => $userData->youtube,
-            SnsProviderType::SOUNDCLOUD->value => $userData->soundcloud,
-            SnsProviderType::APPLEMUSIC->value => $userData->applemusic,
-            SnsProviderType::LINEMUSIC->value => $userData->linemusic,
-            SnsProviderType::BANDCAMP->value => $userData->bandcamp,
-            SnsProviderType::TWITTER->value => $userData->twitter,
-        ];
-
-        foreach ($snsLinks as $platform => $link) {
-            if (!empty($link) && isset($snsProviders[$platform])) {
-                $user->snsLinks()->create([
-                    'sns_provider_id' => $snsProviders[$platform]->id,
-                    'url' => $link,
-                ]);
-            }
-        }
-        }
+        $update($userData);
         DB::commit();
       } catch(Exception $e) {
+        DB::rollBack();
         Log::error(print_r($e->getMessage(), true));
+        return response()->error($e->getCode(), $e->getMessage());
       }
-
+      return response()->success(Response::HTTP_OK, 'ユーザー更新が完了しました');
     }
 
     public function show(Request $request)

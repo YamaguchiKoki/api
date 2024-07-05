@@ -14,8 +14,8 @@ class PlayListResource extends Data
       public string $id,
       public string $name,
       public string $description,
-      public string|Optional $image_url,
-      public int|Optional $added_to_bookshelf_count,
+      public ?string $image_url,
+      public int $added_to_bookshelf_count,
       /** @var \App\Data\Resources\Song\SongResource[] */
       public readonly array $songs,
       public DateTime $created_at,
