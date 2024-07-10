@@ -44,8 +44,6 @@ class PlaylistController extends Controller
     $playlistId = $request->query('playlist_id');
     $playlist = Playlist::findOrFail($playlistId);
 
-
-
     return PlayListResource::from($playlist->load(['songs']));
   }
 
@@ -63,7 +61,7 @@ class PlaylistController extends Controller
         'id' => $playlist->id,
         'name' => $playlist->name,
         'description' => $playlist->description,
-        'image_url' => $playlist->image_url ?? Optional::create(),
+        'image_url' => $playlist->image_url ? $playlist->image_url: null,
         'added_to_bookshelf_count' => $playlist->added_to_bookshelf_count ?? 0,
         'songs' => $songs,
         'created_at' => $playlist->created_at,
@@ -71,5 +69,10 @@ class PlaylistController extends Controller
     } catch(Exception $e) {
       return response()->error($e->getCode(), $e->getMessage());
     }
+  }
+
+  public function delete()
+  {
+    //実装
   }
 }

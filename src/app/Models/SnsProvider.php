@@ -23,4 +23,5 @@ class SnsProvider extends Model
                     ->withPivot('sns_user_id')
                     ->withTimestamps();
     }
+
 }

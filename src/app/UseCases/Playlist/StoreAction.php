@@ -39,12 +39,12 @@ final class StoreAction
         $songs = [];
 
         foreach ($attributes->songs as $order=>$songData) {
-          $playlist->songs()->create([
-              'name' => $songData->name,
-              'order' => $order + 1,
-              'url' => $songData->url,
-              'url_type' => $songData->type
-          ]);
+          // $playlist->songs()->create([
+          //     'name' => $songData->name,
+          //     'order' => $order + 1,
+          //     'url' => $songData->url,
+          //     'url_type' => $songData->type
+          // ]);
           $song = $playlist->songs()->create([
             'name' => $songData->name,
             'order' => $order + 1,

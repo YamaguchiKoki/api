@@ -8,6 +8,7 @@ use App\Data\Resources\User\UserResource;
 use \App\Data\Request\User\CredentialData;
 use App\UseCases\User\Exceptions\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 final class LoginAction
 {

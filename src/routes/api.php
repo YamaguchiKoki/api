@@ -8,7 +8,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [UserController::class, 'login']);
-
+Route::post('/refresh', [UserController::class, 'refresh']);
 Route::middleware('auth:jwt')->group(function () {
     Route::get('/me', [UserController::class, 'show']);
     Route::post('/logout', [UserController::class, 'logout']);
