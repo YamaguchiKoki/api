@@ -1,6 +1,6 @@
 FROM php:8.3-fpm-bullseye AS base
 
-WORKDIR /workspace
+WORKDIR /work/src
 
 # timezone environment
 ENV TZ=UTC \
@@ -39,7 +39,7 @@ RUN <<EOF
   mkdir /composer
   mkdir -p /home/phper/.config/psysh
   chown phper:phper /composer
-  chown phper:phper /workspace
+  chown phper:phper /work/src
   chown phper:phper /home/phper/.config/psysh
   apt-get clean
   rm -rf /var/lib/apt/lists/*
@@ -65,7 +65,7 @@ USER phper
 FROM base AS deploy
 
 COPY ./infra/docker/php/php.deploy.ini /usr/local/etc/php/php.ini
-COPY --chown=phper:phper ./src /workspace
+COPY --chown=phper:phper ./src /work/src
 
 USER phper
 
