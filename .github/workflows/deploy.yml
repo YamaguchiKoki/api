@@ -48,7 +48,7 @@ jobs:
         run: docker-compose exec -T --user root app bash -c "mkdir -p /work/src/vendor && chown -R phper:phper /work/src/vendor"
 
       - name: Install composer dependencies
-        run: docker-compose exec -T --user phper app composer install -n --prefer-dist --no-dev
+        run: docker-compose exec -T --user root app composer install -n --prefer-dist --no-dev
 
       - uses: aws-actions/amazon-ecr-login@v1
         id: amazon-ecr-login
