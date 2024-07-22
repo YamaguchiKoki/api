@@ -42,6 +42,7 @@ jobs:
           key: composer-v1-${{ hashFiles('src/composer.lock') }}
 
       - run: |
+          docker-compose exec -T app chown -R www-data:www-data /work/src
           docker-compose exec -T app mkdir -p /work/src/vendor
           docker-compose exec -T app composer install -n --prefer-dist --no-dev
 
