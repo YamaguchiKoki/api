@@ -3,24 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Data\Resources\PlayList\PlayListForListCollection;
-use App\Data\Resources\PlayList\PlayListForListResource;
 use App\Data\Resources\PlayList\PlayListResource;
 use App\Http\Requests\Playlist\CreateRequest;
-use App\Models\User;
 use App\UseCases\Playlist\FetchByAuthorIdAction;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Playlist;
 use App\Data\Request\Playlist\ForStoreData;
-use App\Data\Resources\Song\SongResource;
 use App\UseCases\Playlist\StoreAction;
 use Exception;
 use Spatie\LaravelData\Optional;
 
 class PlaylistController extends Controller
 {
+  /**
+   * 任意のユーザーが作成したプレイリストを全部取得
+   *
+   * @param Request $request
+   * @param FetchByAuthorIdAction $fetchByAuthorId
+   * @return PlayListForListCollection
+   */
   public function index(Request $request, FetchByAuthorIdAction $fetchByAuthorId): PlayListForListCollection
   {
     $authorId = $request->query('author_id');
@@ -42,7 +44,7 @@ class PlaylistController extends Controller
     $playlistId = $request->query('playlist_id');
     $playlist = Playlist::findOrFail($playlistId);
 
-    return PlayListResource::from($playlist);
+    return PlayListResource::from($playlist->load(['songs']));
   }
 
   public function store(CreateRequest $request, StoreAction $store): PlayListResource
@@ -59,7 +61,7 @@ class PlaylistController extends Controller
         'id' => $playlist->id,
         'name' => $playlist->name,
         'description' => $playlist->description,
-        'image_url' => $playlist->image_url ?? Optional::create(),
+        'image_url' => $playlist->image_url ? $playlist->image_url: null,
         'added_to_bookshelf_count' => $playlist->added_to_bookshelf_count ?? 0,
         'songs' => $songs,
         'created_at' => $playlist->created_at,
@@ -67,5 +69,10 @@ class PlaylistController extends Controller
     } catch(Exception $e) {
       return response()->error($e->getCode(), $e->getMessage());
     }
+  }
+
+  public function delete()
+  {
+    //実装
   }
 }

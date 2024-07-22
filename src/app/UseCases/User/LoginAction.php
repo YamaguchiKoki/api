@@ -8,6 +8,7 @@ use App\Data\Resources\User\UserResource;
 use \App\Data\Request\User\CredentialData;
 use App\UseCases\User\Exceptions\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 final class LoginAction
 {
@@ -21,6 +22,10 @@ final class LoginAction
 
         $user = Auth::guard('jwt')->user();
 
-        return [UserResource::from($user), $token];
+        if (! $user) {
+          throw new AuthenticationException('User not found');
+        }
+
+        return [UserResource::fromModel($user), $token];
     }
 }
