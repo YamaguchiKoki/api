@@ -41,9 +41,11 @@ jobs:
           path: src/vendor
           key: composer-v1-${{ hashFiles('src/composer.lock') }}
 
-      - run: |
-          docker-compose exec -T app bash -c "mkdir -p /work/src/vendor && chown -R phper:phper /work/src/vendor"
-          docker-compose exec -T --user phper app composer install -n --prefer-dist --no-dev
+      - name: Create vendor directory
+        run: docker-compose exec -T app bash -c "mkdir -p /work/src/vendor && chown -R phper:phper /work/src/vendor"
+
+      - name: Install composer dependencies
+        run: docker-compose exec -T --user phper app composer install -n --prefer-dist --no-dev
 
       - uses: aws-actions/amazon-ecr-login@v1
         id: amazon-ecr-login
