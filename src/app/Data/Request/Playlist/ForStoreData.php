@@ -15,7 +15,7 @@ final class ForStoreData extends Data
 {
     public function __construct(
         public readonly string $userId,
-        public readonly string|Optional $imageUrl,
+        public readonly ?string $imageUrl,
         public readonly string $title,
         public readonly string $description,
         /** @var \App\Data\Request\Song\SongData[] */
