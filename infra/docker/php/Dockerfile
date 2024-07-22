@@ -45,6 +45,8 @@ RUN <<EOF
   rm -rf /var/lib/apt/lists/*
 EOF
 
+RUN mkdir -p /work/src/vendor && chown -R phper:phper /work/src && chmod -R 755 /work/src
+
 FROM base AS development
 
 COPY ./infra/docker/php/php.development.ini /usr/local/etc/php/php.ini
@@ -67,12 +69,16 @@ FROM base AS deploy
 COPY ./infra/docker/php/php.deploy.ini /usr/local/etc/php/php.ini
 COPY --chown=phper:phper ./src /work/src
 
-USER phper
+USER root
 
 RUN <<EOF
   composer install --quiet --no-interaction --no-ansi --no-dev --no-scripts --no-progress --prefer-dist
   composer dump-autoload --optimize
-  chmod -R 777 storage bootstrap/cache
+  chown -R phper:phper /work/src
+  chmod -R 755 /work/src
+  chmod -R 775 /work/src/storage /work/src/bootstrap/cache
   php artisan optimize:clear
   php artisan optimize
 EOF
+
+USER phper
