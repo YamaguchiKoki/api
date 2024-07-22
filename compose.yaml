@@ -13,7 +13,7 @@ services:
     volumes:
       - type: bind
         source: ./src
-        target: /workspace
+        target: /work/src
     environment:
       # Please remove this environment variable, after created the Laravel project. Please write in .env
       - DB_CONNECTION=${DB_CONNECTION:-mysql}
@@ -35,7 +35,7 @@ services:
     volumes:
       - type: bind
         source: ./src
-        target: /workspace
+        target: /work/src
 
   db:
     build:
