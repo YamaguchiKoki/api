@@ -77,6 +77,8 @@ RUN <<EOF
   chown -R phper:phper /work/src
   chmod -R 755 /work/src
   chmod -R 775 /work/src/storage /work/src/bootstrap/cache
+  mkdir -p /work/src/vendor
+  chown -R phper:phper /work/src/vendor
   php artisan optimize:clear
   php artisan optimize
 EOF
