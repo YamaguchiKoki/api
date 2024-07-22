@@ -1,13 +1,11 @@
 <?php
-
-declare(strict_types=1);
-
 namespace App\Data\Resources\Sns;
 
-use Spatie\LaravelData\Attributes\MapInputName;
-use Spatie\LaravelData\Attributes\MapOutputName;
+use App\Enums\SnsProviderType;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\SnakeCaseMapper;
+use Spatie\LaravelData\Attributes\MapInputName;
+use Spatie\LaravelData\Attributes\MapOutputName;
 
 class SnsProviderData extends Data
 {
@@ -15,7 +13,6 @@ class SnsProviderData extends Data
     #[MapInputName(SnakeCaseMapper::class)]
     public function __construct(
         public int $id,
-        public string $providerName,
-    ) {
-    }
+        public SnsProviderType $providerName,
+    ) {}
 }

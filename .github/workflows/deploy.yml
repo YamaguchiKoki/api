@@ -6,7 +6,8 @@ on:
             - main
             - feature/push_images_to_ecr
 
-env: AWS_REGION: ap-northeast-1
+env:
+    AWS_REGION: ap-northeast-1
 
 jobs:
     deploy:
@@ -14,8 +15,7 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            -name: Configure aws credentials for prod
-            # if: github.ref == 'refs/heads/main'
+            - name: Configure aws credentials for prod
             uses: aws-actions/configure-aws-credentials@v1
             with:
                 aws-access-key-id: ${{ secrets.PROD_AWS_ACCESS_KEY_ID }}
