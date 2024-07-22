@@ -34,6 +34,9 @@ jobs:
 
       - run: docker-compose up -d --build app web
 
+      - name: Check permissions
+        run: docker-compose exec -T app bash -c "ls -l /work/src"
+
       - name: Cache composer
         id: cache-composer
         uses: actions/cache@v2
