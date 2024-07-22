@@ -46,6 +46,12 @@ jobs:
       - uses: aws-actions/amazon-ecr-login@v1
         id: amazon-ecr-login
 
+      - name: Debug information
+        run: |
+            ls -la src
+            docker-compose exec -T app ls -la /work/src
+            docker-compose exec -T app id
+
       - name: Push nginx image to ecr
         env:
           DOCKER_BUILDKIT: 1

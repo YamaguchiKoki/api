@@ -67,7 +67,7 @@ USER phper
 FROM base AS deploy
 
 COPY ./infra/docker/php/php.deploy.ini /usr/local/etc/php/php.ini
-COPY --chown=phper:phper ./src /work/src
+COPY --chown=www-data:www-data ./src /work/src
 
 USER root
 
